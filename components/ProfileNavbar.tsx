@@ -1,4 +1,10 @@
+import { Profile } from "@/types";
+import axios from "axios";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import Loader from "./Loader";
+import LoginProfileModal from "./LoginProfileModal";
 
 type ProfileNavbarProps = {
   name: string;
@@ -6,6 +12,26 @@ type ProfileNavbarProps = {
 };
 
 function ProfileNavbar({ name, avatar }: ProfileNavbarProps) {
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+
+  const [userId, setUserId] = useState<string>("");
+  const [isLoginProfileModal, setIsLoginProfileModal] =
+    useState<boolean>(false);
+
+  const fetchProfiles = async () => {
+    try {
+      const response = await axios.get("/api/profile");
+      setProfiles(response.data.profiles);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfiles();
+  }, []);
+
   return (
     <nav className="w-full px-6 py-3 flex items-center justify-between bg-black shadow-md">
       <div className="text-xl font-bold text-gray-800">
@@ -23,13 +49,40 @@ function ProfileNavbar({ name, avatar }: ProfileNavbarProps) {
         </button>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 relative">
         <span className="text-sm font-medium text-white">{name}</span>
         <img
           src={avatar}
           alt="avatar"
           className="w-10 h-10 rounded-full object-cover border"
+          onClick={() => setIsOpenModal(!isOpenModal)}
         />
+
+        {isOpenModal && (
+          <div className="absolute bg-white top-15 right-0 p-2 rounded w-40 flex flex-col gap-3">
+            {profiles.map((profile) =>
+              profile.name !== name ? (
+                <span
+                  onClick={() => {
+                    setIsLoginProfileModal(true);
+                    setUserId(profile._id);
+                  }}
+                  key={profile._id}
+                  className="cursor-pointer"
+                >
+                  {profile.name}
+                </span>
+              ) : null
+            )}
+          </div>
+        )}
+
+        {isLoginProfileModal && (
+          <LoginProfileModal
+            userId={userId}
+            setShowPasswordModal={setIsLoginProfileModal}
+          />
+        )}
       </div>
     </nav>
   );
