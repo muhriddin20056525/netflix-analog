@@ -1,18 +1,18 @@
-import { Profile } from "@/types/next-auth";
+import { Profile } from "@/types";
 import { Dispatch, SetStateAction } from "react";
 
 type ProfileCardProps = {
   profile: Profile;
   deleteProfile: (id: string) => void;
   setShowPasswordModal: Dispatch<SetStateAction<boolean>>;
-  setUserId: Dispatch<SetStateAction<string>>;
+  setProfileId: Dispatch<SetStateAction<string>>;
 };
 
 function ProfileCard({
   profile,
   deleteProfile,
   setShowPasswordModal,
-  setUserId,
+  setProfileId,
 }: ProfileCardProps) {
   return (
     <div className="max-w-xs w-[400px] bg-white rounded-lg shadow-md overflow-hidden">
@@ -26,7 +26,7 @@ function ProfileCard({
           className="text-xl font-semibold text-gray-800 cursor-pointer hover:underline"
           onClick={() => {
             setShowPasswordModal(true);
-            setUserId(profile._id);
+            setProfileId(profile._id);
           }}
         >
           {profile.name}

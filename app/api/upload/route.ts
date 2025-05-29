@@ -27,7 +27,10 @@ export async function POST(req: Request) {
       folder: "netflix-analog",
     });
 
-    return NextResponse.json({ url: result.url }, { status: 200 });
+    return NextResponse.json(
+      { url: result.url, fileId: result.fileId },
+      { status: 200 }
+    );
   } catch (err) {
     return NextResponse.json({ error: "Yuklashda xatolik" }, { status: 500 });
   }

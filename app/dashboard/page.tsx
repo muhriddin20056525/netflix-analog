@@ -7,8 +7,8 @@ import ProfileModal from "@/components/ProfileModal";
 import { Profile } from "@/types";
 
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 function Dashboard() {
   const [showProfileModal, setShowProfileModal] = useState<boolean>(false);
@@ -17,9 +17,7 @@ function Dashboard() {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [error, setError] = useState("");
 
-  const [userId, setUserId] = useState<string>("");
-
-  const router = useRouter();
+  const [profileId, setProfileId] = useState<string>("");
 
   const fetchProfiles = async () => {
     try {
@@ -40,10 +38,15 @@ function Dashboard() {
 
   const deleteProfile = async (id: string) => {
     try {
+      const { data } = await axios.get(`/api/profile/${id}`);
+
+      await axios.delete(`/api/upload/${data.profile.fileId}`);
+
       await axios.delete(`/api/profile/${id}`);
       fetchProfiles();
     } catch (error) {
       console.log(error);
+      toast.error("Xatolik yuz berdi");
     }
   };
 
@@ -65,7 +68,7 @@ function Dashboard() {
               profile={profile}
               deleteProfile={deleteProfile}
               setShowPasswordModal={setShowPasswordModal}
-              setUserId={setUserId}
+              setProfileId={setProfileId}
             />
           ))}
       </div>
@@ -73,7 +76,7 @@ function Dashboard() {
       {showPasswordModal && (
         <LoginProfileModal
           setShowPasswordModal={setShowPasswordModal}
-          userId={userId}
+          profileId={profileId}
         />
       )}
     </div>

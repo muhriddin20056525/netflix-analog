@@ -9,7 +9,7 @@ import bcrypt from "bcrypt";
 export async function POST(req: Request) {
   await connectToDb();
 
-  const { name, password, avatar } = await req.json();
+  const { name, password, avatar, fileId } = await req.json();
 
   const session = await getServerSession(authOptions);
 
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     });
   }
 
-  if (!name || !password || !avatar) {
+  if (!name || !password || !avatar || !fileId) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
@@ -31,6 +31,7 @@ export async function POST(req: Request) {
       password: hashedPassword,
       avatar,
       userId: session.user.id,
+      fileId,
     });
 
     return NextResponse.json(

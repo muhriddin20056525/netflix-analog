@@ -1,10 +1,12 @@
+"use client";
+
 import { Profile } from "@/types";
 import axios from "axios";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import Loader from "./Loader";
 import LoginProfileModal from "./LoginProfileModal";
+import { useRouter } from "next/navigation";
 
 type ProfileNavbarProps = {
   name: string;
@@ -15,9 +17,11 @@ function ProfileNavbar({ name, avatar }: ProfileNavbarProps) {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [profiles, setProfiles] = useState<Profile[]>([]);
 
-  const [userId, setUserId] = useState<string>("");
+  const [profileId, setProfileId] = useState<string>("");
   const [isLoginProfileModal, setIsLoginProfileModal] =
     useState<boolean>(false);
+
+  const router = useRouter();
 
   const fetchProfiles = async () => {
     try {
@@ -65,7 +69,7 @@ function ProfileNavbar({ name, avatar }: ProfileNavbarProps) {
                 <span
                   onClick={() => {
                     setIsLoginProfileModal(true);
-                    setUserId(profile._id);
+                    setProfileId(profile._id);
                   }}
                   key={profile._id}
                   className="cursor-pointer"
@@ -74,12 +78,19 @@ function ProfileNavbar({ name, avatar }: ProfileNavbarProps) {
                 </span>
               ) : null
             )}
+
+            <button
+              onClick={() => router.push("/dashboard")}
+              className="bg-red-500 text-white p-1 rounded font-medium cursor-pointer"
+            >
+              Go To Dashboard
+            </button>
           </div>
         )}
 
         {isLoginProfileModal && (
           <LoginProfileModal
-            userId={userId}
+            profileId={profileId}
             setShowPasswordModal={setIsLoginProfileModal}
           />
         )}

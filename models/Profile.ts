@@ -5,6 +5,7 @@ const ProfileSchema = new Schema({
   password: { type: String, required: true },
   avatar: { type: String, required: true },
   userId: { type: String, required: true },
+  fileId: { type: String, required: true },
   savedMovies: { type: [String], default: [] },
 });
 

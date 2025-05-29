@@ -1,31 +1,47 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
+import toast from "react-hot-toast";
 
 type LoginProfileModalProps = {
   setShowPasswordModal: Dispatch<SetStateAction<boolean>>;
-  userId: string;
+  profileId: string;
 };
 
 function LoginProfileModal({
   setShowPasswordModal,
-  userId,
+  profileId,
 }: LoginProfileModalProps) {
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
 
   const handleProfileLogin = async () => {
-    if (!password || !userId) return;
+    if (!password || !profileId) {
+      toast.error("Missing fields");
+      return;
+    }
 
     try {
       const { data } = await axios.post("/api/profile/login", {
         password,
-        profileId: userId,
+        profileId,
       });
 
-      router.push(`/profile/${data.profile._id}`);
+      console.log(data);
+
+      if (data?.profile?._id) {
+        router.push(`/profile/${data.profile._id}`);
+      } else {
+        toast.error("Profile not found");
+      }
     } catch (error) {
-      console.log(error);
+      if (axios.isAxiosError(error)) {
+        const errorMessage =
+          error.response?.data?.error || "Something went wrong";
+        toast.error(errorMessage);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 

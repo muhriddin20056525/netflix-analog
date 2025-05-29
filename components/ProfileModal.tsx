@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import Loader from "./Loader";
+import toast from "react-hot-toast";
 
 type ProfileModalProps = {
   setShowProfileModal: Dispatch<SetStateAction<boolean>>;
@@ -18,16 +19,23 @@ function ProfileModal({ setShowProfileModal }: ProfileModalProps) {
     name: "",
     password: "",
     avatar: "",
+    fileId: "",
   });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!profileData.name || !profileData.password || !profileData.avatar) {
-      return alert("Error Input");
+    if (
+      !profileData.name ||
+      !profileData.password ||
+      !profileData.avatar ||
+      !profileData.fileId
+    ) {
+      return toast.error("Missing fields");
     }
 
-    const { data } = await axios.post("/api/profile", profileData);
+    await axios.post("/api/profile", profileData);
+
     setShowProfileModal(false);
   };
 
@@ -43,7 +51,8 @@ function ProfileModal({ setShowProfileModal }: ProfileModalProps) {
     formData.append("fileName", file.name);
 
     const { data } = await axios.post("/api/upload", formData);
-    setProfileData({ ...profileData, avatar: data.url });
+
+    setProfileData({ ...profileData, avatar: data.url, fileId: data.fileId });
     setIsLoading(false);
   };
 

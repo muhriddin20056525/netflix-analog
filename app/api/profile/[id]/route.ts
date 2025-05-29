@@ -1,8 +1,6 @@
 import { connectToDb } from "@/lib/mongodb";
 import ProfileModel from "@/models/Profile";
 import { NextResponse } from "next/server";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
 
 export async function DELETE(
   _req: Request,
@@ -11,9 +9,12 @@ export async function DELETE(
   await connectToDb();
 
   try {
-    await ProfileModel.findByIdAndDelete(params.id);
+    const profile = await ProfileModel.findByIdAndDelete(params.id);
 
-    return NextResponse.json({ message: "Profile deleted successfully" });
+    return NextResponse.json({
+      message: "Profile deleted successfully",
+      profile,
+    });
   } catch (error) {
     return NextResponse.json(
       { error: `Server error ${error}` },
