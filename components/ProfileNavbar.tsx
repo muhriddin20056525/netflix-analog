@@ -7,6 +7,7 @@ import { FaSearch } from "react-icons/fa";
 import Loader from "./Loader";
 import LoginProfileModal from "./LoginProfileModal";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type ProfileNavbarProps = {
   name: string;
@@ -20,6 +21,8 @@ function ProfileNavbar({ name, avatar }: ProfileNavbarProps) {
   const [profileId, setProfileId] = useState<string>("");
   const [isLoginProfileModal, setIsLoginProfileModal] =
     useState<boolean>(false);
+
+  const [searchText, setSearchText] = useState<string>("");
 
   const router = useRouter();
 
@@ -36,6 +39,14 @@ function ProfileNavbar({ name, avatar }: ProfileNavbarProps) {
     fetchProfiles();
   }, []);
 
+  const handleSearch = () => {
+    if (!searchText) {
+      return toast.error("Enter movie name");
+    }
+
+    router.push(`/search?q=${searchText}`);
+  };
+
   return (
     <nav className="w-full px-6 py-3 flex items-center justify-between bg-black shadow-md">
       <div className="text-xl font-bold text-gray-800">
@@ -47,8 +58,18 @@ function ProfileNavbar({ name, avatar }: ProfileNavbarProps) {
           type="text"
           placeholder="Search..."
           className="w-full px-4 py-2 border rounded-full border-white text-white"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch();
+            }
+          }}
         />
-        <button className="absolute right-3 text-gray-500 hover:text-blue-600">
+        <button
+          onClick={handleSearch}
+          className="absolute right-3 text-gray-500 hover:text-blue-600"
+        >
           <FaSearch />
         </button>
       </div>

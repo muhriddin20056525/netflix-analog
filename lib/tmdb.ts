@@ -38,3 +38,15 @@ export const getPopularMovies = async (type: string) => {
     console.log(error);
   }
 };
+
+export const getSearchResults = async (type: string, title: string) => {
+  try {
+    const { data } = await axios.get(
+      `${BASE_URL}/search/${type}?api_key=${API_KEY}&include_adult=false&language=en-US&query=${title}`
+    );
+
+    return data && data.results;
+  } catch (error) {
+    console.log(error);
+  }
+};
