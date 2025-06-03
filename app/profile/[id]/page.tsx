@@ -62,6 +62,7 @@ function ProfilePage() {
         ];
 
         const allMovies = [...tvShows, ...moviesShows];
+
         setMoviesData(allMovies);
       } catch (error) {
         console.log(error);

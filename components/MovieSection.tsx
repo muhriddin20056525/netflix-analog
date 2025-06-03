@@ -5,7 +5,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import { FreeMode, Pagination } from "swiper/modules";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import DetailModal from "./DetailModal";
 
 type MovieSectionProps = {
   title: string;
@@ -13,7 +14,8 @@ type MovieSectionProps = {
 };
 
 function MovieSection({ title, data }: MovieSectionProps) {
-  const router = useRouter();
+  const [showDetailModal, setShowDetailModal] = useState<boolean>(false);
+  const [movie, setMovie] = useState<MovieProps | null>(null);
 
   return (
     <div className="mb-10 px-4">
@@ -50,17 +52,29 @@ function MovieSection({ title, data }: MovieSectionProps) {
                   )}
                 </p>
               </div>
-              {/* Optional: Hover Overlay */}
-              <div
-                onClick={() => router.push(`/movie-detail/${movie.id}`)}
-                className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-sm rounded-lg"
-              >
-                View Details
+
+              <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-sm rounded-lg">
+                <span
+                  onClick={() => {
+                    setMovie(movie);
+                    setShowDetailModal(true);
+                  }}
+                  className="mb-3"
+                >
+                  View Details
+                </span>
+                <button className="bg-blue-800 text-white py-1 px-3">
+                  Add To Favorites
+                </button>
               </div>
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
+
+      {showDetailModal && (
+        <DetailModal movie={movie} setShowDetailModal={setShowDetailModal} />
+      )}
     </div>
   );
 }

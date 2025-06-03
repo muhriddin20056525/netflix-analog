@@ -8,6 +8,7 @@ import Loader from "./Loader";
 import LoginProfileModal from "./LoginProfileModal";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 type ProfileNavbarProps = {
   name: string;
@@ -75,6 +76,10 @@ function ProfileNavbar({ name, avatar }: ProfileNavbarProps) {
       </div>
 
       <div className="flex items-center gap-3 relative">
+        <Link href={"/favorites"} className="text-sm font-medium text-white">
+          Favorites
+        </Link>
+
         <span className="text-sm font-medium text-white">{name}</span>
         <img
           src={avatar}
@@ -84,7 +89,7 @@ function ProfileNavbar({ name, avatar }: ProfileNavbarProps) {
         />
 
         {isOpenModal && (
-          <div className="absolute bg-white top-15 right-0 p-2 rounded w-40 flex flex-col gap-3">
+          <div className="absolute bg-white top-15 right-0 p-2 rounded w-40 flex flex-col gap-3 z-10">
             {profiles.map((profile) =>
               profile.name !== name ? (
                 <span
