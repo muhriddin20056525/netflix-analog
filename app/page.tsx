@@ -1,25 +1,38 @@
 "use client";
 
-import { signIn } from "next-auth/react";
-import { FaGoogle } from "react-icons/fa";
+import { signIn, useSession } from "next-auth/react";
+import { redirect, useRouter } from "next/navigation";
 
-function Home() {
+function HomePage() {
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  if (session) {
+    redirect("/manage-accounts");
+  }
+
   return (
     <div
-      className="w-full h-screen bg-no-repeat bg-cover flex justify-center items-center"
-      style={{ backgroundImage: "url('/bg-img.jpg')" }}
+      className="w-full h-screen flex items-center justify-center"
+      style={{
+        background: "url(/bg.jpg)",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
     >
-      <div className="bg-black/70 flex justify-center items-center rounded w-[350px] h-[300px]">
+      <div className="w-[300px] h-[250px] bg-black/80 rounded flex items-center justify-center">
         <button
-          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-          className="flex items-center gap-2 px-5 py-2.5 bg-red-500 text-white rounded-xl shadow-md hover:shadow-lg transition duration-300"
+          className="w-[80%] bg-red-700 text-white py-2 font-bold rounded"
+          onClick={() => {
+            signIn("google");
+            router.push("/manage-accounts");
+          }}
         >
-          <FaGoogle size={24} className="text-white" />
-          <span className="text-base font-medium">Login with Google</span>
+          Login With Google
         </button>
       </div>
     </div>
   );
 }
 
-export default Home;
+export default HomePage;
