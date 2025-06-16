@@ -1,0 +1,49 @@
+import { connectToDb } from "@/lib/mongodb";
+import AccountModel from "@/models/AccountModel";
+import { NextResponse } from "next/server";
+import bcrypt from "bcrypt";
+
+// Create Account
+export async function POST(req: Request) {
+  // connect To Db
+  await connectToDb();
+
+  // Get Req.Json Data
+  const { accountImg, username, password, uid } = await req.json();
+
+  // Validate Data
+  if (!accountImg || !username || !password || !uid) {
+    return NextResponse.json(
+      { message: "Complete all sections" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    // Hash Password With Bcrypt
+    const hashedPassword = await bcrypt.hashSync(password, 12);
+
+    // Create New Account
+    const newAccount = await AccountModel.create({
+      accountImg,
+      username,
+      password: hashedPassword,
+      uid,
+    });
+
+    // Return Response To Frontend
+    return NextResponse.json(
+      {
+        message: "Created New Account Successfully",
+        account: newAccount,
+        success: true,
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { message: `Server Error ${error}`, success: false },
+      { status: 500 }
+    );
+  }
+}

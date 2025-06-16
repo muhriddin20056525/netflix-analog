@@ -18,7 +18,9 @@ function ManageAccountsPage() {
       </button>
 
       {/* Showing AddAccount Modal */}
-      {isOpenAddAccountModal ? <AddAccountModal /> : null}
+      {isOpenAddAccountModal ? (
+        <AddAccountModal setIsOpenAddAccountModal={setIsOpenAddAccountModal} />
+      ) : null}
     </div>
   );
 }

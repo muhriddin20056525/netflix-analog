@@ -1,5 +1,8 @@
+import axios from "axios";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { p } from "framer-motion/client";
+import { useSession } from "next-auth/react";
+import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 
 type FormValues = {
@@ -8,11 +11,62 @@ type FormValues = {
   password: string;
 };
 
-function AddAccountModal() {
-  const { register, handleSubmit } = useForm<FormValues>();
+type AddAccountModalProps = {
+  setIsOpenAddAccountModal: Dispatch<SetStateAction<boolean>>;
+};
 
-  const onSubmit = async (data: FormValues) => {
-    console.log(data);
+function AddAccountModal({ setIsOpenAddAccountModal }: AddAccountModalProps) {
+  const { data: session } = useSession();
+
+  const { register, handleSubmit, formState, reset } = useForm<FormValues>();
+  const { errors } = formState;
+
+  const onSubmit = async (info: FormValues) => {
+    // Get Image File
+    const imageFile = info.image[0];
+    if (!imageFile) return;
+
+    const formData = new FormData();
+
+    // Set FormData Image
+    formData.append("file", imageFile);
+    formData.append("fileName", imageFile.name);
+
+    // Upload Image To Imagekit
+    const { data: imageData } = await axios.post(
+      "/api/accounts/upload",
+      formData
+    );
+
+    try {
+      // Validate Data
+      if (
+        !imageData.url ||
+        !info.username ||
+        !info.password ||
+        !session?.user.id
+      ) {
+        console.log(`Compleate All Section`);
+        return;
+      }
+
+      // Create Account Request
+      const { data } = await axios.post("/api/accounts", {
+        accountImg: imageData.url,
+        username: info.username,
+        password: info.password,
+        uid: session?.user.id,
+      });
+
+      if (data?.success) {
+        // Clearing All Input
+        reset();
+        // Closing AddAccountModal
+        setIsOpenAddAccountModal(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -65,6 +119,9 @@ function AddAccountModal() {
               required: "Image is required",
             })}
           />
+          {errors.image && (
+            <p className="text-red-800 font-semibold">{errors.image.message}</p>
+          )}
         </label>
       </div>
 
@@ -81,6 +138,11 @@ function AddAccountModal() {
             required: "Username is required",
           })}
         />
+        {errors.username && (
+          <p className="text-red-800 font-semibold">
+            {errors.username.message}
+          </p>
+        )}
       </div>
 
       {/* Password Input And Label */}
@@ -96,6 +158,12 @@ function AddAccountModal() {
             required: "Password is required",
           })}
         />
+
+        {errors.password && (
+          <p className="text-red-800 font-semibold">
+            {errors.password.message}
+          </p>
+        )}
       </div>
 
       {/* Create Account Button */}
