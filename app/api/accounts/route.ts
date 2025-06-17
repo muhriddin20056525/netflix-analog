@@ -47,3 +47,37 @@ export async function POST(req: Request) {
     );
   }
 }
+
+// Get All Accounts
+export async function GET(req: Request) {
+  await connectToDb();
+
+  // Get uid it need becouse find this user all accounts
+  const { searchParams } = new URL(req.url);
+  const uid = searchParams.get("uid");
+
+  // Checked uid
+  if (!uid) {
+    return NextResponse.json({ message: "uId is required" });
+  }
+
+  try {
+    // Find all account by uid
+    const allAccounts = await AccountModel.find({ uid });
+
+    // Sent to frontend AllAccounts
+    return NextResponse.json(
+      {
+        message: "Get all accounts",
+        success: true,
+        accounts: allAccounts,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { message: `Server Error ${error}`, success: false },
+      { status: 500 }
+    );
+  }
+}
