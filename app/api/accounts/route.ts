@@ -9,10 +9,10 @@ export async function POST(req: Request) {
   await connectToDb();
 
   // Get Req.Json Data
-  const { accountImg, username, password, uid } = await req.json();
+  const { accountImg, username, password, uid, fileId } = await req.json();
 
   // Validate Data
-  if (!accountImg || !username || !password || !uid) {
+  if (!accountImg || !username || !password || !uid || !fileId) {
     return NextResponse.json(
       { message: "Complete all sections" },
       { status: 400 }
@@ -29,6 +29,7 @@ export async function POST(req: Request) {
       username,
       password: hashedPassword,
       uid,
+      fileId,
     });
 
     // Return Response To Frontend

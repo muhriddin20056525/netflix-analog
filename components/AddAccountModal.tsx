@@ -1,3 +1,4 @@
+import { IAccount } from "@/types";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { p } from "framer-motion/client";
@@ -13,9 +14,13 @@ type FormValues = {
 
 type AddAccountModalProps = {
   setIsOpenAddAccountModal: Dispatch<SetStateAction<boolean>>;
+  getAllAccounts: () => void;
 };
 
-function AddAccountModal({ setIsOpenAddAccountModal }: AddAccountModalProps) {
+function AddAccountModal({
+  setIsOpenAddAccountModal,
+  getAllAccounts,
+}: AddAccountModalProps) {
   const { data: session } = useSession();
 
   const { register, handleSubmit, formState, reset } = useForm<FormValues>();
@@ -42,6 +47,7 @@ function AddAccountModal({ setIsOpenAddAccountModal }: AddAccountModalProps) {
       // Validate Data
       if (
         !imageData.url ||
+        !imageData.fileId ||
         !info.username ||
         !info.password ||
         !session?.user.id
@@ -56,6 +62,7 @@ function AddAccountModal({ setIsOpenAddAccountModal }: AddAccountModalProps) {
         username: info.username,
         password: info.password,
         uid: session?.user.id,
+        fileId: imageData.fileId,
       });
 
       if (data?.success) {
@@ -63,6 +70,9 @@ function AddAccountModal({ setIsOpenAddAccountModal }: AddAccountModalProps) {
         reset();
         // Closing AddAccountModal
         setIsOpenAddAccountModal(false);
+
+        // Get all Account function
+        getAllAccounts();
       }
     } catch (error) {
       console.log(error);

@@ -3,10 +3,11 @@ import { Trash2 } from "lucide-react";
 
 type AccountCardProps = {
   account: IAccount;
+  deleteAccount: (id: string) => void;
 };
 
-function AccountCard({ account }: AccountCardProps) {
-  const { accountImg, username } = account;
+function AccountCard({ account, deleteAccount }: AccountCardProps) {
+  const { _id, accountImg, username } = account;
 
   return (
     <div className="bg-white shadow-md rounded-2xl p-4 flex items-center space-x-4 w-full max-w-sm">
@@ -26,6 +27,7 @@ function AccountCard({ account }: AccountCardProps) {
       <button
         className="text-red-500 hover:text-red-700 transition"
         title="Delete"
+        onClick={() => deleteAccount(_id)}
       >
         <Trash2 size={20} />
       </button>

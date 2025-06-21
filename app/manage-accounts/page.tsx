@@ -2,6 +2,7 @@
 
 import AccountCard from "@/components/AccountCard";
 import AddAccountModal from "@/components/AddAccountModal";
+import Loader from "@/components/Loader";
 import { IAccount } from "@/types";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -19,25 +20,38 @@ function ManageAccountsPage() {
   const [accounts, setAccounts] = useState<IAccount[]>([]);
 
   // Request For Get All Account
+  const getAllAccounts = async () => {
+    try {
+      // Request to backend for get all accunts of this user
+      const { data } = await axios.get("/api/accounts", {
+        params: {
+          uid: session?.user.id,
+        },
+      });
+      // Set State taken account
+      setAccounts(data.accounts);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (status !== "authenticated") return;
-    const getAllAccounts = async () => {
-      try {
-        // Request to backend for get all accunts of this user
-        const { data } = await axios.get("/api/accounts", {
-          params: {
-            uid: session?.user.id,
-          },
-        });
-        // Set State taken account
-        setAccounts(data.accounts);
-      } catch (error) {
-        console.log(error);
-      }
-    };
 
     getAllAccounts();
   }, [status, session]);
+
+  // Delete Account
+  const deleteAccount = async (id: string) => {
+    try {
+      // Send Request To Delete Api
+      const { data } = await axios.delete(`/api/accounts/${id}`);
+      //  Update Accounts State
+      setAccounts((prev) => prev.filter((account) => account._id !== id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="bg-slate-900 h-screen py-5">
@@ -51,17 +65,26 @@ function ManageAccountsPage() {
 
       {/* Showing AddAccount Modal */}
       {isOpenAddAccountModal ? (
-        <AddAccountModal setIsOpenAddAccountModal={setIsOpenAddAccountModal} />
+        <AddAccountModal
+          setIsOpenAddAccountModal={setIsOpenAddAccountModal}
+          getAllAccounts={getAllAccounts}
+        />
       ) : null}
 
       {/* Showing This User All Accounts */}
       <div className="flex justify-center items-center gap-5 flex-wrap mt-10">
         {accounts.length > 0 ? (
           accounts.map((account) => (
-            <AccountCard account={account} key={account._id} />
+            <AccountCard
+              account={account}
+              key={account._id}
+              deleteAccount={deleteAccount}
+            />
           ))
         ) : (
-          <h1>Loading...</h1>
+          <div>
+            <Loader />
+          </div>
         )}
       </div>
     </div>

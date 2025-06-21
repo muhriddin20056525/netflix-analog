@@ -5,6 +5,7 @@ const AccountSchema = new Schema({
   username: { type: String, required: true },
   password: { type: String, required: true },
   uid: { type: String, required: true },
+  fileId: { type: String, required: true },
 });
 
 const AccountModel = models.Account || model("Account", AccountSchema);
