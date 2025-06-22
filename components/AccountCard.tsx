@@ -1,12 +1,18 @@
 import { IAccount } from "@/types";
 import { Trash2 } from "lucide-react";
+import { Dispatch, SetStateAction } from "react";
 
 type AccountCardProps = {
   account: IAccount;
   deleteAccount: (id: string) => void;
+  setChangeAccount: Dispatch<SetStateAction<boolean>>;
 };
 
-function AccountCard({ account, deleteAccount }: AccountCardProps) {
+function AccountCard({
+  account,
+  deleteAccount,
+  setChangeAccount,
+}: AccountCardProps) {
   const { _id, accountImg, username } = account;
 
   return (
@@ -19,8 +25,13 @@ function AccountCard({ account, deleteAccount }: AccountCardProps) {
       />
 
       {/* Title */}
-      <div className="flex-1">
-        <h2 className="text-lg font-semibold text-gray-800">{username}</h2>
+      <div
+        className="flex-1 cursor-pointer group"
+        onClick={() => setChangeAccount(true)}
+      >
+        <h2 className="text-lg font-semibold text-gray-800 group-hover:underline">
+          {username}
+        </h2>
       </div>
 
       {/* Delete Button */}

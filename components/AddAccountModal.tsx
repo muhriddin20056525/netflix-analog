@@ -1,9 +1,10 @@
 import { IAccount } from "@/types";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { p } from "framer-motion/client";
+import { p, span } from "framer-motion/client";
+import { LoaderCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 
 type FormValues = {
@@ -26,7 +27,11 @@ function AddAccountModal({
   const { register, handleSubmit, formState, reset } = useForm<FormValues>();
   const { errors } = formState;
 
+  // Loading State For Disabled Button On Create Account
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const onSubmit = async (info: FormValues) => {
+    setIsLoading(true);
     // Get Image File
     const imageFile = info.image[0];
     if (!imageFile) return;
@@ -76,6 +81,8 @@ function AddAccountModal({
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -181,7 +188,11 @@ function AddAccountModal({
         type="submit"
         className="w-full bg-blue-800 py-2 font-semibold text-white border-0 rounded"
       >
-        Create Account
+        {isLoading ? (
+          <LoaderCircle className="animate-spin mx-auto" />
+        ) : (
+          "Create Account"
+        )}
       </button>
     </motion.form>
   );

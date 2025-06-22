@@ -2,6 +2,7 @@
 
 import AccountCard from "@/components/AccountCard";
 import AddAccountModal from "@/components/AddAccountModal";
+import ChangeAccountModal from "@/components/ChangeAccountModal";
 import Loader from "@/components/Loader";
 import { IAccount } from "@/types";
 import axios from "axios";
@@ -18,6 +19,9 @@ function ManageAccountsPage() {
 
   // Get All Account State
   const [accounts, setAccounts] = useState<IAccount[]>([]);
+
+  // Change Account Modal State
+  const [changeAccount, setChangeAccount] = useState<boolean>(false);
 
   // Request For Get All Account
   const getAllAccounts = async () => {
@@ -79,6 +83,7 @@ function ManageAccountsPage() {
               account={account}
               key={account._id}
               deleteAccount={deleteAccount}
+              setChangeAccount={setChangeAccount}
             />
           ))
         ) : (
@@ -87,6 +92,11 @@ function ManageAccountsPage() {
           </div>
         )}
       </div>
+
+      {/* Showing Change Account Modal */}
+      {changeAccount ? (
+        <ChangeAccountModal setChangeAccount={setChangeAccount} />
+      ) : null}
     </div>
   );
 }
