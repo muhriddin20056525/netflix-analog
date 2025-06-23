@@ -2,22 +2,53 @@ import { CircleX } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type ChangeAccountModalProps = {
   setChangeAccount: Dispatch<SetStateAction<boolean>>;
+  accountId: string;
 };
 
 type FormType = {
   password: string;
 };
 
-function ChangeAccountModal({ setChangeAccount }: ChangeAccountModalProps) {
+function ChangeAccountModal({
+  setChangeAccount,
+  accountId,
+}: ChangeAccountModalProps) {
+  // UseRouter hook for navigate dashboard page
+  const router = useRouter();
+  // useForm for control form
   const { register, handleSubmit, formState } = useForm<FormType>();
+  //  Error for showing input error message
   const { errors } = formState;
 
-  const onSubmit = (data: FormType) => {
-    console.log(data);
-  };
+  // Choosing account function
+  async function onSubmit(formValue: FormType) {
+    try {
+      // Send request for choosing account
+      const { data } = await axios.post("/api/accounts/login", {
+        accountId,
+        password: formValue.password,
+      });
+
+      // Checking data and navigate dashboard page
+      if (data.success) {
+        router.push("/dashboard");
+        return;
+      }
+    } catch (error) {
+      // Checking and showing error
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Noma'lum xatolik yuz berdi.");
+      }
+    }
+  }
 
   return (
     <motion.div

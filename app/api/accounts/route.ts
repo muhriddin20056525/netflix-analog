@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 
   try {
     // Hash Password With Bcrypt
-    const hashedPassword = await bcrypt.hashSync(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     // Create New Account
     const newAccount = await AccountModel.create({

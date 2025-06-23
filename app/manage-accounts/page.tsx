@@ -23,6 +23,9 @@ function ManageAccountsPage() {
   // Change Account Modal State
   const [changeAccount, setChangeAccount] = useState<boolean>(false);
 
+  // Get Current Account Id State
+  const [accountId, setAccountId] = useState<string>("");
+
   // Request For Get All Account
   const getAllAccounts = async () => {
     try {
@@ -84,6 +87,7 @@ function ManageAccountsPage() {
               key={account._id}
               deleteAccount={deleteAccount}
               setChangeAccount={setChangeAccount}
+              setAccountId={setAccountId}
             />
           ))
         ) : (
@@ -95,7 +99,10 @@ function ManageAccountsPage() {
 
       {/* Showing Change Account Modal */}
       {changeAccount ? (
-        <ChangeAccountModal setChangeAccount={setChangeAccount} />
+        <ChangeAccountModal
+          setChangeAccount={setChangeAccount}
+          accountId={accountId}
+        />
       ) : null}
     </div>
   );

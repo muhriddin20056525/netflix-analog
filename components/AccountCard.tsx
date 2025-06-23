@@ -6,12 +6,14 @@ type AccountCardProps = {
   account: IAccount;
   deleteAccount: (id: string) => void;
   setChangeAccount: Dispatch<SetStateAction<boolean>>;
+  setAccountId: Dispatch<SetStateAction<string>>;
 };
 
 function AccountCard({
   account,
   deleteAccount,
   setChangeAccount,
+  setAccountId,
 }: AccountCardProps) {
   const { _id, accountImg, username } = account;
 
@@ -27,7 +29,10 @@ function AccountCard({
       {/* Title */}
       <div
         className="flex-1 cursor-pointer group"
-        onClick={() => setChangeAccount(true)}
+        onClick={() => {
+          setAccountId(_id);
+          setChangeAccount(true);
+        }}
       >
         <h2 className="text-lg font-semibold text-gray-800 group-hover:underline">
           {username}
