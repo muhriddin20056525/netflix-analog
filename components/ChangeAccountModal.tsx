@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useAccount } from "@/context/AccountContext";
 
 type ChangeAccountModalProps = {
   setChangeAccount: Dispatch<SetStateAction<boolean>>;
@@ -26,6 +27,9 @@ function ChangeAccountModal({
   //  Error for showing input error message
   const { errors } = formState;
 
+  // Save Account ID Funtion
+  const { setAccountIdFn } = useAccount();
+
   // Choosing account function
   async function onSubmit(formValue: FormType) {
     try {
@@ -38,6 +42,8 @@ function ChangeAccountModal({
       // Checking data and navigate dashboard page
       if (data.success) {
         router.push("/dashboard");
+        // Saved AccountId to LocalStorage
+        setAccountIdFn(data.account._id);
         return;
       }
     } catch (error) {

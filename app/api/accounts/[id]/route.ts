@@ -9,6 +9,7 @@ const imagekit = new ImageKit({
   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT!,
 });
 
+// Delete Account And Image
 export async function DELETE(_req: Request, route: { params: { id: string } }) {
   await connectToDb();
   const { id } = await route.params;
@@ -37,6 +38,32 @@ export async function DELETE(_req: Request, route: { params: { id: string } }) {
     await AccountModel.findByIdAndDelete(id);
 
     return NextResponse.json({ message: "Account Deleted", success: true });
+  } catch (error) {
+    return NextResponse.json(
+      { message: `Server Error ${error}`, success: false },
+      { status: 500 }
+    );
+  }
+}
+
+// Get Single Account
+
+export async function GET(req: Request, route: { params: { id: string } }) {
+  // Connect MongoDb
+  await connectToDb();
+  // Get AccountId from params
+  const { id } = route.params;
+
+  try {
+    // Find Account by id from MongoDb
+    const account = await AccountModel.findById(id);
+
+    // Return Response To Frontend
+    return NextResponse.json({
+      message: "Get Accound",
+      success: true,
+      account,
+    });
   } catch (error) {
     return NextResponse.json(
       { message: `Server Error ${error}`, success: false },
