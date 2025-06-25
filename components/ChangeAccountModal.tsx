@@ -41,9 +41,9 @@ function ChangeAccountModal({
 
       // Checking data and navigate dashboard page
       if (data.success) {
-        router.push("/dashboard");
         // Saved AccountId to LocalStorage
         setAccountIdFn(data.account._id);
+        router.push(`/dashboard/${data.account._id}`);
         return;
       }
     } catch (error) {
@@ -60,7 +60,7 @@ function ChangeAccountModal({
     <motion.div
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      className="bg-white w-[70%] z-10 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-10 rounded-2xl"
+      className="bg-white border w-[70%] z-10 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-10 rounded-2xl"
     >
       {/* Close Modal Button */}
       <CircleX

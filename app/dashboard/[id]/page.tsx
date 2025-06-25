@@ -1,25 +1,23 @@
 "use client";
 
 import Navbar from "@/components/Navbar";
-import { useAccount } from "@/context/AccountContext";
 import { IAccount } from "@/types";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
-function DashboardPage() {
+function DashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const [account, setAccount] = useState<IAccount | null>(null);
 
-  // Get Account ID From Localstorage By Context
-  const { accountId } = useAccount();
+  const { id } = use(params);
 
   useEffect(() => {
     // Check Account ID
-    if (!accountId) return;
+    if (!id) return;
 
     // Request To Backend
     const getAccountData = async () => {
       try {
-        const { data } = await axios.get(`/api/accounts/${accountId}`);
+        const { data } = await axios.get(`/api/accounts/${id}`);
         // Set AccountInfo To State
         setAccount(data.account);
       } catch (error) {
@@ -28,7 +26,7 @@ function DashboardPage() {
     };
 
     getAccountData();
-  }, [accountId]);
+  }, [id]);
 
   return (
     <div>
