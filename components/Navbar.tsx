@@ -98,8 +98,12 @@ function Navbar({ account }: NavbarProps) {
                   <button
                     key={item._id}
                     onClick={() => {
+                      // Get Clicked Element Account ID
                       setAccountId(item._id);
+                      // Toggle Change Account Modal
                       setChangeAccountModal(!changeAccountModal);
+                      // Close To Choose Account Modal
+                      setAccountModal(false);
                     }}
                     className="flex items-center gap-10 mb-5 hover:shadow w-full p-2 cursor-pointer"
                   >
