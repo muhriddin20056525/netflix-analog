@@ -1,5 +1,8 @@
 "use client";
 
+import Loader from "@/components/Loader";
+import MovieCard from "@/components/MovieCard";
+import MovieSection from "@/components/MovieSection";
 import Navbar from "@/components/Navbar";
 import {
   fetchPopularMovies,
@@ -9,7 +12,7 @@ import {
   fetchUpcomingMovies,
   tmdbApi,
 } from "@/lib/tmdb";
-import { IAccount } from "@/types";
+import { IAccount, IMovieSection } from "@/types";
 import axios from "axios";
 import { use, useEffect, useState } from "react";
 
@@ -17,7 +20,7 @@ function DashboardPage({ params }: { params: Promise<{ id: string }> }) {
   // Account State
   const [account, setAccount] = useState<IAccount | null>(null);
   // All Movies State
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState<IMovieSection[]>([]);
 
   const { id } = use(params);
 
@@ -40,6 +43,7 @@ function DashboardPage({ params }: { params: Promise<{ id: string }> }) {
   }, [id]);
 
   useEffect(() => {
+    // get All Movies From TMDB Api
     const getAllMovies = async () => {
       try {
         const [
@@ -56,10 +60,11 @@ function DashboardPage({ params }: { params: Promise<{ id: string }> }) {
           fetchUpcomingMovies(),
         ]);
 
-        console.log([
+        // Make Array From All Movies
+        setMovies([
           { title: "Trending Movies", data: trendingData },
           { title: "Popular Movies", data: popularMoviesData },
-          { title: "Tv Shows", data: popularMoviesData },
+          { title: "Tv Shows", data: popularTvShowsData },
           { title: "Top Rated", data: topRatedData },
           { title: "Upcoming Movies", data: upcomingMoviesData },
         ]);
@@ -74,6 +79,19 @@ function DashboardPage({ params }: { params: Promise<{ id: string }> }) {
   return (
     <div>
       <Navbar account={account} />
+
+      {/* Showing Movie Categories */}
+      {movies ? (
+        movies.map((movie) => (
+          <MovieSection
+            title={movie.title}
+            data={movie.data}
+            key={movie.title}
+          />
+        ))
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 }

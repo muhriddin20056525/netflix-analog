@@ -91,7 +91,7 @@ function Navbar({ account }: NavbarProps) {
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="w-[300px] shadow-2xl p-5 absolute right-0 top-12 rounded"
+              className="w-[300px] shadow-2xl p-5 absolute right-0 top-12 rounded bg-white"
             >
               {accounts.length > 0 ? (
                 accounts.map((item) => (
