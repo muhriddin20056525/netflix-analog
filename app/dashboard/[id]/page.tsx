@@ -2,9 +2,11 @@
 
 import Loader from "@/components/Loader";
 import MovieCard from "@/components/MovieCard";
+import MovieDetailModal from "@/components/MovieDetailModal";
 import MovieSection from "@/components/MovieSection";
 import Navbar from "@/components/Navbar";
 import {
+  fetchMovieDetail,
   fetchPopularMovies,
   fetchPopularTvShows,
   fetchTopRatedMovies,
@@ -12,7 +14,7 @@ import {
   fetchUpcomingMovies,
   tmdbApi,
 } from "@/lib/tmdb";
-import { IAccount, IMovieSection } from "@/types";
+import { IAccount, IMovie, IMovieSection } from "@/types";
 import axios from "axios";
 import { use, useEffect, useState } from "react";
 
@@ -21,6 +23,10 @@ function DashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const [account, setAccount] = useState<IAccount | null>(null);
   // All Movies State
   const [movies, setMovies] = useState<IMovieSection[]>([]);
+  // Show Movie Detail Modal State
+  const [isOpenMovieDetail, setIsOpenMovieDetail] = useState<boolean>(false);
+  // Select Single Movie For Movie Detail
+  const [movieDetail, setMovieDetail] = useState<IMovie>();
 
   const { id } = use(params);
 
@@ -76,6 +82,13 @@ function DashboardPage({ params }: { params: Promise<{ id: string }> }) {
     getAllMovies();
   }, []);
 
+  const getMovieDetail = async (id: number) => {
+    const data = await fetchMovieDetail(id);
+    setMovieDetail(data);
+    setIsOpenMovieDetail(true);
+    console.log(data);
+  };
+
   return (
     <div>
       <Navbar account={account} />
@@ -87,10 +100,19 @@ function DashboardPage({ params }: { params: Promise<{ id: string }> }) {
             title={movie.title}
             data={movie.data}
             key={movie.title}
+            getMovieDetail={getMovieDetail}
           />
         ))
       ) : (
         <Loader />
+      )}
+
+      {/* Show Movie Detail Modal */}
+      {isOpenMovieDetail && movieDetail && (
+        <MovieDetailModal
+          movie={movieDetail}
+          setIsOpenMovieDetail={setIsOpenMovieDetail}
+        />
       )}
     </div>
   );

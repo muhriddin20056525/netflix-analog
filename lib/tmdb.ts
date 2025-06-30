@@ -59,11 +59,11 @@ export const fetchUpcomingMovies = async () => {
   }
 };
 
-// Fetch Movie By ID For Movie Detail
-export const fetchMoveById = async (id: string) => {
+// Fetch Movie Detail
+export const fetchMovieDetail = async (id: number) => {
   try {
     const { data } = await tmdbApi.get(`/movie/${id}`);
-    return data.results;
+    return data;
   } catch (error) {
     console.log(error);
   }
