@@ -68,3 +68,13 @@ export const fetchMovieDetail = async (id: number) => {
     console.log(error);
   }
 };
+
+// Search movie
+export const searchMovies = async (name: string) => {
+  try {
+    const { data } = await tmdbApi.get(`/search/movie?query=${name}`);
+    return data.results;
+  } catch (error) {
+    console.log(error);
+  }
+};

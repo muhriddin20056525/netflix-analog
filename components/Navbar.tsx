@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import ChangeAccountModal from "./ChangeAccountModal";
 import { useAccount } from "@/context/AccountContext";
 import { useRouter } from "next/navigation";
+import { searchMovies } from "@/lib/tmdb";
 
 type NavbarProps = {
   account: IAccount | null;
@@ -23,6 +24,8 @@ function Navbar({ account }: NavbarProps) {
   const [accountId, setAccountId] = useState<string>("");
   // Toggle Change Account Modal
   const [changeAccountModal, setChangeAccountModal] = useState<boolean>(false);
+  // Search Value State
+  const [searchValue, setSearchValue] = useState<string>("");
 
   // Session For Get User Id
   const { data: session } = useSession();
@@ -51,6 +54,13 @@ function Navbar({ account }: NavbarProps) {
     getAllAccounts();
   }, [session?.user.id]);
 
+  // Search Movie
+  const handleSearch = () => {
+    if (searchValue.trim()) {
+      router.push(`/search?query=${encodeURIComponent(searchValue.trim())}`);
+    }
+  };
+
   return (
     <nav className="bg-gray-800 px-4 py-3 flex items-center justify-between">
       {/* Logo */}
@@ -62,8 +72,13 @@ function Navbar({ account }: NavbarProps) {
           type="text"
           placeholder="Search..."
           className="flex-1 px-4 py-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
         />
-        <button className="p-2 hover:bg-gray-600 transition-colors duration-200 text-white">
+        <button
+          onClick={handleSearch}
+          className="p-2 hover:bg-gray-600 transition-colors duration-200 text-white cursor-pointer"
+        >
           <Search size={20} />
         </button>
       </div>
