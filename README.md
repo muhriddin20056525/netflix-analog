@@ -11,6 +11,7 @@ Netflix streaming platformasining analog versiyasi bo'lib, foydalanuvchilar uchu
 - 🔐 **Xavfsiz autentifikatsiya**: Google orqali NextAuth.js bilan tizimga kirish
 - 📱 **Responsive dizayn**: Barcha qurilmalarda yaxshi ko'rinish
 - ⚡ **Tezkor ishlash**: Next.js 15 va Turbopack bilan optimallashtirilgan
+- 🛡️ **Protected routes**: Login qilmagan foydalanuvchilar uchun himoya
 
 ## 🛠️ Texnologiyalar
 
@@ -95,7 +96,8 @@ netflix-analog/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API endpoints
 │   │   ├── accounts/      # Foydalanuvchi profillari API
-│   │   └── auth/          # Autentifikatsiya API
+│   │   ├── auth/          # Autentifikatsiya API
+│   │   └── favorites/     # Sevimli kinolar API
 │   ├── dashboard/         # Asosiy sahifa
 │   ├── favorites/         # Sevimli kinolar
 │   ├── manage-accounts/   # Profillarni boshqarish
@@ -106,7 +108,8 @@ netflix-analog/
 ├── models/                # MongoDB modellari
 ├── providers/             # Context providers
 ├── public/                # Statik fayllar
-└── types/                 # TypeScript tiplari
+├── types/                 # TypeScript tiplari
+└── middleware.ts          # Protected routes
 ```
 
 ## 🎯 Asosiy funksiyalar
@@ -114,27 +117,32 @@ netflix-analog/
 ### 1. Autentifikatsiya
 - Google orqali tizimga kirish
 - Xavfsiz sessiya boshqaruvi
+- Protected routes himoyasi
 - Avtomatik yo'naltirish
 
 ### 2. Foydalanuvchi profillari
 - Bir nechta profil yaratish
 - Profil rasmini o'zgartirish
 - Profil nomini tahrirlash
+- Profillarni o'chirish
 
 ### 3. Kino ko'rish
 - Turli kategoriyalardagi kinolar
 - Kino tafsilotlari
 - Trailer va ma'lumotlar
+- Sevimlilarga qo'shish
 
 ### 4. Qidiruv
 - Real-time qidiruv
 - Filtrlash va saralash
 - Natijalarni ko'rsatish
+- Kino tafsilotlarini ko'rish
 
 ### 5. Sevimli kinolar
 - Sevimli kinolarni saqlash
 - Ro'yxatni ko'rish
 - O'chirish funksiyasi
+- Optimallashtirilgan ma'lumotlar
 
 ## 🔧 API Endpoints
 
@@ -144,9 +152,30 @@ netflix-analog/
 - `POST /api/accounts` - Yangi profil yaratish
 - `PUT /api/accounts/[id]` - Profilni yangilash
 - `DELETE /api/accounts/[id]` - Profilni o'chirish
+- `POST /api/accounts/login` - Profilga kirish
+- `POST /api/accounts/upload` - Rasm yuklash
 
 ### Auth
 - `GET /api/auth/[...nextauth]` - NextAuth.js endpoints
+
+### Favorites
+- `GET /api/favorites` - Favoritelarni olish
+- `POST /api/favorites` - Kino qo'shish
+- `DELETE /api/favorites/[id]` - Kino o'chirish
+
+## 🛡️ Xavfsizlik
+
+### Protected Routes
+- **Middleware**: Server-side himoya
+- **Client-side**: Har bir sahifada tekshiruv
+- **Autentifikatsiya**: NextAuth.js bilan
+- **Yo'naltirish**: Login qilmagan foydalanuvchilar uchun
+
+### Ma'lumotlar xavfsizligi
+- **Parol hashlash**: bcrypt bilan
+- **JWT tokenlar**: Xavfsiz sessiya
+- **MongoDB**: Ma'lumotlar bazasi himoyasi
+- **API himoya**: Middleware orqali
 
 ## 🎨 UI/UX xususiyatlari
 
@@ -155,6 +184,7 @@ netflix-analog/
 - **Animatsiyalar**: Framer Motion bilan silliq animatsiyalar
 - **Loading states**: Foydalanuvchi tajribasini yaxshilash
 - **Error handling**: Xatolarni to'g'ri ko'rsatish
+- **Toast xabarlar**: Foydalanuvchi xabarlari
 
 ## 🚀 Deployment
 
@@ -192,6 +222,16 @@ Bu loyiha MIT litsenziyasi ostida tarqatiladi. Batafsil ma'lumot uchun `LICENSE`
 - [Next.js](https://nextjs.org/) - Framework uchun
 - [Tailwind CSS](https://tailwindcss.com/) - Styling uchun
 - [Framer Motion](https://www.framer.com/motion/) - Animatsiyalar uchun
+- [NextAuth.js](https://next-auth.js.org/) - Autentifikatsiya uchun
+
+## 🔄 Yangilanishlar
+
+### v1.0.0
+- ✅ Asosiy funksiyalar qo'shildi
+- ✅ Protected routes yaratildi
+- ✅ Favorites tizimi qo'shildi
+- ✅ Responsive dizayn
+- ✅ Xavfsizlik tizimi
 
 ---
 
