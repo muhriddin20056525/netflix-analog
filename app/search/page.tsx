@@ -6,8 +6,12 @@ import { fetchMovieDetail, searchMovies } from "@/lib/tmdb";
 import { IMovie } from "@/types";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 function SearchPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  
   // Get Search Value From Params
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
@@ -21,8 +25,12 @@ function SearchPage() {
   // For Select Movie
   const [selectedMovie, setSelectedMovie] = useState<IMovie | null>(null);
 
-  // useRouter For Go Back Button
-  const router = useRouter();
+  // Check authentication
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
 
   useEffect(() => {
     // check query

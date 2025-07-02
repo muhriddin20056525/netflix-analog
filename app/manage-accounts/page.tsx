@@ -6,8 +6,9 @@ import ChangeAccountModal from "@/components/ChangeAccountModal";
 import Loader from "@/components/Loader";
 import { IAccount } from "@/types";
 import axios from "axios";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { LogOut } from "lucide-react";
 
 function ManageAccountsPage() {
   // Get User Id From Next Auth
@@ -60,15 +61,52 @@ function ManageAccountsPage() {
     }
   };
 
+  // Check authentication and redirect if not authenticated
+  if (status === "unauthenticated") {
+    return (
+      <div className="bg-slate-900 h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-white text-2xl font-bold mb-4">Access Denied</h1>
+          <p className="text-gray-400">Please login to access this page</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading while checking authentication
+  if (status === "loading") {
+    return (
+      <div className="bg-slate-900 h-screen flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-slate-900 h-screen py-5">
-      {/* Add Account Button */}
-      <button
-        onClick={() => setIsOpenAddAccountModal(!isOpenAddAccountModal)}
-        className="bg-white py-2 px-6 font-semibold rounded mx-auto block cursor-pointer active:scale-95 transition-all duration-200"
-      >
-        Add Account
-      </button>
+      {/* Header with Add Account and Logout */}
+      <div className="flex justify-between items-center px-8 mb-8">
+        <h1 className="text-white text-2xl font-bold">Manage Accounts</h1>
+        
+        <div className="flex gap-4">
+          {/* Add Account Button */}
+          <button
+            onClick={() => setIsOpenAddAccountModal(!isOpenAddAccountModal)}
+            className="bg-white py-2 px-6 font-semibold rounded cursor-pointer active:scale-95 transition-all duration-200"
+          >
+            Add Account
+          </button>
+
+          {/* Logout Button */}
+          <button
+            onClick={() => signOut()}
+            className="bg-red-600 hover:bg-red-700 text-white py-2 px-6 font-semibold rounded cursor-pointer active:scale-95 transition-all duration-200 flex items-center gap-2"
+          >
+            <LogOut size={18} />
+            Logout
+          </button>
+        </div>
+      </div>
 
       {/* Showing AddAccount Modal */}
       {isOpenAddAccountModal ? (

@@ -1,36 +1,198 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎬 Netflix Analog
 
-## Getting Started
+Netflix streaming platformasining analog versiyasi bo'lib, foydalanuvchilar uchun zamonaviy va qulay kinolar va seriallarni ko'rish imkonini beradi.
 
-First, run the development server:
+## ✨ Asosiy xususiyatlar
 
+- 🎭 **Kinolar va seriallar**: TMDB API orqali eng so'nggi va mashhur kinolar
+- 🔍 **Qidiruv tizimi**: Kinolar va seriallarni nomi bo'yicha qidirish
+- 👤 **Foydalanuvchi profillari**: Bir nechta profil yaratish va boshqarish
+- ❤️ **Sevimli filmlar**: Sevimli kinolarni saqlash va ko'rish
+- 🔐 **Xavfsiz autentifikatsiya**: Google orqali NextAuth.js bilan tizimga kirish
+- 📱 **Responsive dizayn**: Barcha qurilmalarda yaxshi ko'rinish
+- ⚡ **Tezkor ishlash**: Next.js 15 va Turbopack bilan optimallashtirilgan
+
+## 🛠️ Texnologiyalar
+
+### Frontend
+- **Next.js 15** - React framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animatsiyalar
+- **Lucide React** - Ikonlar
+
+### Backend
+- **Next.js API Routes** - Backend API
+- **MongoDB** - Ma'lumotlar bazasi
+- **Mongoose** - MongoDB ODM
+- **NextAuth.js** - Autentifikatsiya
+- **bcrypt** - Parol hashlash
+
+### API va xizmatlar
+- **TMDB API** - Kino ma'lumotlari
+- **ImageKit** - Rasmlarni saqlash
+- **Google OAuth** - Tizimga kirish
+
+## 🚀 O'rnatish va ishga tushirish
+
+### Talablar
+- Node.js 18+ 
+- MongoDB
+- Google OAuth credentials
+- TMDB API key
+
+### 1. Loyihani klonlash
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-username/netflix-analog.git
+cd netflix-analog
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Dependensiyalarni o'rnatish
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Muhit o'zgaruvchilarini sozlash
+`.env.local` fayl yarating va quyidagi o'zgaruvchilarni qo'shing:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+# MongoDB
+MONGODB_URI=your_mongodb_connection_string
 
-## Learn More
+# NextAuth
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your_nextauth_secret
 
-To learn more about Next.js, take a look at the following resources:
+# Google OAuth
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# TMDB API
+TMDB_API_KEY=your_tmdb_api_key
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# ImageKit
+IMAGEKIT_PUBLIC_KEY=your_imagekit_public_key
+IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
+IMAGEKIT_URL_ENDPOINT=your_imagekit_url_endpoint
+```
 
-## Deploy on Vercel
+### 4. Loyihani ishga tushirish
+```bash
+# Development rejimida
+npm run dev
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Production build
+npm run build
+npm start
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Loyiha `http://localhost:3000` manzilida ochiladi.
+
+## 📁 Loyiha tuzilishi
+
+```
+netflix-analog/
+├── app/                    # Next.js App Router
+│   ├── api/               # API endpoints
+│   │   ├── accounts/      # Foydalanuvchi profillari API
+│   │   └── auth/          # Autentifikatsiya API
+│   ├── dashboard/         # Asosiy sahifa
+│   ├── favorites/         # Sevimli kinolar
+│   ├── manage-accounts/   # Profillarni boshqarish
+│   └── search/            # Qidiruv sahifasi
+├── components/            # React komponentlari
+├── context/               # React Context
+├── lib/                   # Utility funksiyalar
+├── models/                # MongoDB modellari
+├── providers/             # Context providers
+├── public/                # Statik fayllar
+└── types/                 # TypeScript tiplari
+```
+
+## 🎯 Asosiy funksiyalar
+
+### 1. Autentifikatsiya
+- Google orqali tizimga kirish
+- Xavfsiz sessiya boshqaruvi
+- Avtomatik yo'naltirish
+
+### 2. Foydalanuvchi profillari
+- Bir nechta profil yaratish
+- Profil rasmini o'zgartirish
+- Profil nomini tahrirlash
+
+### 3. Kino ko'rish
+- Turli kategoriyalardagi kinolar
+- Kino tafsilotlari
+- Trailer va ma'lumotlar
+
+### 4. Qidiruv
+- Real-time qidiruv
+- Filtrlash va saralash
+- Natijalarni ko'rsatish
+
+### 5. Sevimli kinolar
+- Sevimli kinolarni saqlash
+- Ro'yxatni ko'rish
+- O'chirish funksiyasi
+
+## 🔧 API Endpoints
+
+### Accounts
+- `GET /api/accounts` - Barcha profillarni olish
+- `GET /api/accounts/[id]` - Profil ma'lumotlarini olish
+- `POST /api/accounts` - Yangi profil yaratish
+- `PUT /api/accounts/[id]` - Profilni yangilash
+- `DELETE /api/accounts/[id]` - Profilni o'chirish
+
+### Auth
+- `GET /api/auth/[...nextauth]` - NextAuth.js endpoints
+
+## 🎨 UI/UX xususiyatlari
+
+- **Zamonaviy dizayn**: Netflix'ga o'xshash interfeys
+- **Responsive**: Barcha qurilmalarda yaxshi ko'rinish
+- **Animatsiyalar**: Framer Motion bilan silliq animatsiyalar
+- **Loading states**: Foydalanuvchi tajribasini yaxshilash
+- **Error handling**: Xatolarni to'g'ri ko'rsatish
+
+## 🚀 Deployment
+
+### Vercel (Tavsiya etiladi)
+```bash
+npm install -g vercel
+vercel
+```
+
+### Boshqa platformalar
+- Netlify
+- Railway
+- Heroku
+
+## 🤝 Hissa qo'shish
+
+1. Repository'ni fork qiling
+2. Feature branch yarating (`git checkout -b feature/amazing-feature`)
+3. O'zgarishlarni commit qiling (`git commit -m 'Add amazing feature'`)
+4. Branch'ga push qiling (`git push origin feature/amazing-feature`)
+5. Pull Request yarating
+
+## 📝 Litsenziya
+
+Bu loyiha MIT litsenziyasi ostida tarqatiladi. Batafsil ma'lumot uchun `LICENSE` faylini ko'ring.
+
+## 📞 Bog'lanish
+
+- GitHub: [@your-username](https://github.com/your-username)
+- Email: your-email@example.com
+
+## 🙏 Minnatdorchilik
+
+- [TMDB](https://www.themoviedb.org/) - Kino ma'lumotlari uchun
+- [Next.js](https://nextjs.org/) - Framework uchun
+- [Tailwind CSS](https://tailwindcss.com/) - Styling uchun
+- [Framer Motion](https://www.framer.com/motion/) - Animatsiyalar uchun
+
+---
+
+⭐ Agar bu loyiha sizga foydali bo'lsa, uni yulduzcha bilan baholashni unutmang!

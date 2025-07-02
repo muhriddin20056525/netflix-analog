@@ -29,3 +29,23 @@ export interface IMovieSection {
   title: string;
   data: IMovie[];
 }
+
+export interface IFavorite {
+  _id: string;
+  accountId: string;
+  movieId: number;
+  movieData: {
+    id: number;
+    title?: string;
+    name?: string;
+    overview?: string;
+    poster_path?: string;
+    backdrop_path?: string;
+    release_date?: string;
+    first_air_date?: string;
+    vote_average?: number;
+    genre_ids?: number[];
+    media_type?: string;
+  };
+  addedAt: Date;
+}

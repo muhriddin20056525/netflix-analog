@@ -1,6 +1,9 @@
 import { IMovie } from "@/types";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
+import { useAccount } from "@/context/AccountContext";
+import toast from "react-hot-toast";
 
 type MovieDetailModalProps = {
   movie: IMovie;
@@ -11,6 +14,37 @@ function MovieDetailModal({
   movie,
   setIsOpenMovieDetail,
 }: MovieDetailModalProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const { accountId } = useAccount() || {};
+
+  const addToFavorites = async () => {
+    if (!accountId) {
+      toast.error("Please choose a profile");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await axios.post("/api/favorites", {
+        accountId,
+        movieData: movie,
+      });
+
+      if (response.data.success) {
+        toast.success("Movie added to favorites!");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div
       onClick={() => setIsOpenMovieDetail(false)}
@@ -52,8 +86,12 @@ function MovieDetailModal({
           <p className="text-gray-200 text-base">{movie.overview}</p>
 
           {/* Save Button */}
-          <button className="mt-4 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium">
-            Add To Favorites
+          <button 
+            onClick={addToFavorites}
+            disabled={isLoading}
+            className="mt-4 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+          >
+            {isLoading ? "Adding..." : "Add To Favorites"}
           </button>
         </div>
       </motion.div>

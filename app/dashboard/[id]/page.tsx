@@ -5,6 +5,8 @@ import MovieCard from "@/components/MovieCard";
 import MovieDetailModal from "@/components/MovieDetailModal";
 import MovieSection from "@/components/MovieSection";
 import Navbar from "@/components/Navbar";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import {
   fetchMovieDetail,
   fetchPopularMovies,
@@ -19,6 +21,9 @@ import axios from "axios";
 import { use, useEffect, useState } from "react";
 
 function DashboardPage({ params }: { params: Promise<{ id: string }> }) {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  
   // Account State
   const [account, setAccount] = useState<IAccount | null>(null);
   // All Movies State
@@ -29,6 +34,13 @@ function DashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const [movieDetail, setMovieDetail] = useState<IMovie>();
 
   const { id } = use(params);
+
+  // Check authentication
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
 
   useEffect(() => {
     // Check Account ID
