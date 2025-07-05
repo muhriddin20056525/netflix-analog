@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 function SearchPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  
+
   // Get Search Value From Params
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";

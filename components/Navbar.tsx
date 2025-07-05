@@ -7,9 +7,7 @@ import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import { motion } from "framer-motion";
 import ChangeAccountModal from "./ChangeAccountModal";
-import { useAccount } from "@/context/AccountContext";
 import { useRouter } from "next/navigation";
-import { searchMovies } from "@/lib/tmdb";
 
 type NavbarProps = {
   account: IAccount | null;

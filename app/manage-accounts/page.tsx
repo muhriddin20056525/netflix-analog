@@ -87,7 +87,7 @@ function ManageAccountsPage() {
       {/* Header with Add Account and Logout */}
       <div className="flex justify-between items-center px-8 mb-8">
         <h1 className="text-white text-2xl font-bold">Manage Accounts</h1>
-        
+
         <div className="flex gap-4">
           {/* Add Account Button */}
           <button

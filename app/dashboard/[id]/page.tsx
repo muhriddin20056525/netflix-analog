@@ -1,7 +1,6 @@
 "use client";
 
 import Loader from "@/components/Loader";
-import MovieCard from "@/components/MovieCard";
 import MovieDetailModal from "@/components/MovieDetailModal";
 import MovieSection from "@/components/MovieSection";
 import Navbar from "@/components/Navbar";
@@ -23,7 +22,7 @@ import { use, useEffect, useState } from "react";
 function DashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const { data: session, status } = useSession();
   const router = useRouter();
-  
+
   // Account State
   const [account, setAccount] = useState<IAccount | null>(null);
   // All Movies State

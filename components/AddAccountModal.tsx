@@ -1,7 +1,5 @@
-import { IAccount } from "@/types";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { p, span } from "framer-motion/client";
 import { LoaderCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { Dispatch, SetStateAction, useState } from "react";
