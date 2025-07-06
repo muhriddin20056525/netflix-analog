@@ -55,7 +55,7 @@ function Navbar({ account }: NavbarProps) {
   // Search Movie
   const handleSearch = () => {
     if (searchValue.trim()) {
-      router.push(`/search?query=${encodeURIComponent(searchValue.trim())}`);
+      router.push(`/search?q=${searchValue}`);
     }
   };
 
