@@ -1,5 +1,6 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import MovieCard from "@/components/MovieCard";
 import MovieDetailModal from "@/components/MovieDetailModal";
 import { fetchMovieDetail, searchMovies } from "@/lib/tmdb";
@@ -10,36 +11,33 @@ import { useSession } from "next-auth/react";
 
 function SearchPage() {
   const searchParams = useSearchParams();
-  const q = searchParams.get("q");
+  const query = searchParams.get("query") || "";
 
-  const { data: session, status } = useSession();
   const router = useRouter();
 
-  const [results, setResults] = useState<IMovie[]>([]);
+  if (!query) {
+    router.back(); // Agar query yo'q bo'lsa, bosh sahifaga yuboriladi
+  }
+
+  // Movie Detail Modal State
   const [isOpenMovieDetail, setIsOpenMovieDetail] = useState<boolean>(false);
+  // Select Movie State
   const [selectedMovie, setSelectedMovie] = useState<IMovie | null>(null);
+  // Search Result State
+  const [results, setResults] = useState<IMovie[]>([]);
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/");
+  const fetchSearchMovie = async () => {
+    try {
+      const data = await searchMovies(query);
+      setResults(data);
+    } catch (error) {
+      console.log(error);
     }
-  }, [status, router]);
+  };
 
   useEffect(() => {
-    if (!q) return;
-
-    const fetchResults = async () => {
-      try {
-        const data = await searchMovies(q);
-        setResults(data);
-        console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchResults();
-  }, [q]);
+    fetchSearchMovie();
+  }, [query]);
 
   const getMovieDetail = async (id: number) => {
     try {

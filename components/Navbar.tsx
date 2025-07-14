@@ -3,7 +3,7 @@ import axios from "axios";
 import { Search } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Loader from "./Loader";
 import { motion } from "framer-motion";
 import ChangeAccountModal from "./ChangeAccountModal";
@@ -53,10 +53,12 @@ function Navbar({ account }: NavbarProps) {
   }, [session?.user.id]);
 
   // Search Movie
-  const handleSearch = () => {
-    if (searchValue.trim()) {
-      router.push(`/search?q=${searchValue}`);
-    }
+  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!searchValue.trim()) return;
+    console.log(searchValue);
+
+    router.push(`/search?query=${encodeURIComponent(searchValue)}`);
   };
 
   return (
@@ -65,7 +67,10 @@ function Navbar({ account }: NavbarProps) {
       <div className="text-white font-bold text-xl">Netflix</div>
 
       {/* Search Bar */}
-      <div className="flex items-center bg-gray-700 rounded overflow-hidden w-[900px] max-w-[900px]">
+      <form
+        onSubmit={handleSearch}
+        className="flex items-center bg-gray-700 rounded overflow-hidden w-[900px] max-w-[900px]"
+      >
         <input
           type="text"
           placeholder="Search..."
@@ -73,13 +78,10 @@ function Navbar({ account }: NavbarProps) {
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
         />
-        <button
-          onClick={handleSearch}
-          className="p-2 hover:bg-gray-600 transition-colors duration-200 text-white cursor-pointer"
-        >
+        <button className="p-2 hover:bg-gray-600 transition-colors duration-200 text-white cursor-pointer">
           <Search size={20} />
         </button>
-      </div>
+      </form>
 
       {/*Navbar End */}
       <div className="flex items-center gap-4">
